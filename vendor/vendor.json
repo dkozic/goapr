@@ -1,0 +1,79 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "NnkTbiudqJqy6K7FSOL/OU4VxdI=",
+			"path": "github.com/go-kit/kit/endpoint",
+			"revision": "7b0e27dddf4379d4020dcfbb16131ece335d3b00",
+			"revisionTime": "2018-03-06T05:08:47Z"
+		},
+		{
+			"checksumSHA1": "Tm7AeB5q3ZL6AXHIk9a/h5eEcmY=",
+			"path": "github.com/go-kit/kit/log",
+			"revision": "7b0e27dddf4379d4020dcfbb16131ece335d3b00",
+			"revisionTime": "2018-03-06T05:08:47Z"
+		},
+		{
+			"checksumSHA1": "rzH5QWrA1pjWpjXprTklXgaMudo=",
+			"path": "github.com/go-kit/kit/transport/http",
+			"revision": "7b0e27dddf4379d4020dcfbb16131ece335d3b00",
+			"revisionTime": "2018-03-06T05:08:47Z"
+		},
+		{
+			"checksumSHA1": "VIpP6PXCQPGznYeF7WjnkxnA6Hg=",
+			"path": "github.com/go-logfmt/logfmt",
+			"revision": "390ab7935ee28ec6b286364bba9b4dd6410cb3d5",
+			"revisionTime": "2016-11-15T14:25:13Z"
+		},
+		{
+			"checksumSHA1": "4i12mddRzVhGXRyTJ1x9KAX4RGM=",
+			"path": "github.com/go-stack/stack",
+			"revision": "259ab82a6cad3992b4e21ff5cac294ccb06474bc",
+			"revisionTime": "2017-11-12T03:14:02Z"
+		},
+		{
+			"checksumSHA1": "YS2Hkq13J4fMkBjMmkwEJzkqYMY=",
+			"path": "github.com/kr/logfmt",
+			"revision": "b84e30acd515aadc4b783ad4ff83aff3299bdfe0",
+			"revisionTime": "2014-02-26T03:06:59Z"
+		},
+		{
+			"checksumSHA1": "DcaFQmrsz8x3InwPU7OtcnOAlMY=",
+			"path": "github.com/sclevine/agouti",
+			"revision": "6ada53bb069e86f8baf0953d4f0ddac081bc7610",
+			"revisionTime": "2018-03-06T16:56:25Z"
+		},
+		{
+			"checksumSHA1": "rQAvQ+bGDWxF6hJQw4PotbwYo5o=",
+			"path": "github.com/sclevine/agouti/api",
+			"revision": "6ada53bb069e86f8baf0953d4f0ddac081bc7610",
+			"revisionTime": "2018-03-06T16:56:25Z"
+		},
+		{
+			"checksumSHA1": "N8w2a42iR1fTcKT4jIVajcrS/QM=",
+			"path": "github.com/sclevine/agouti/api/internal/bus",
+			"revision": "6ada53bb069e86f8baf0953d4f0ddac081bc7610",
+			"revisionTime": "2018-03-06T16:56:25Z"
+		},
+		{
+			"checksumSHA1": "9et5ipJC2W7BjZKUTF7esnYCR3o=",
+			"path": "github.com/sclevine/agouti/api/internal/service",
+			"revision": "6ada53bb069e86f8baf0953d4f0ddac081bc7610",
+			"revisionTime": "2018-03-06T16:56:25Z"
+		},
+		{
+			"checksumSHA1": "TDzWdiAh33+Ne+IQn4lOiu14KQU=",
+			"path": "github.com/sclevine/agouti/internal/element",
+			"revision": "6ada53bb069e86f8baf0953d4f0ddac081bc7610",
+			"revisionTime": "2018-03-06T16:56:25Z"
+		},
+		{
+			"checksumSHA1": "H6BDntAegQqMewKMg1RvNWN0pw4=",
+			"path": "github.com/sclevine/agouti/internal/target",
+			"revision": "6ada53bb069e86f8baf0953d4f0ddac081bc7610",
+			"revisionTime": "2018-03-06T16:56:25Z"
+		}
+	],
+	"rootPath": "github.com/dkozic/goapr"
+}
