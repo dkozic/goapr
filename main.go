@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"net/http"
 	"os"
 
@@ -12,14 +11,14 @@ import (
 const searchUrl = "http://pretraga2.apr.gov.rs/ObjedinjenePretrage/Search/Search"
 
 func main() {
-	var (
-		listen = flag.String("listen", ":8080", "HTTP listen address")
-	)
-	flag.Parse()
+	listen := os.Getenv("PORT")
+	if listen == "" {
+		listen = "8080"
+	}
 
 	var logger log.Logger
 	logger = log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
-	logger = log.With(logger, "ts", log.DefaultTimestampUTC, "listen", *listen, "caller", log.DefaultCaller)
+	logger = log.With(logger, "ts", log.DefaultTimestampUTC, "listen", listen, "caller", log.DefaultCaller)
 
 	var svc AprService
 	svc = aprService{searchUrl}
@@ -39,6 +38,6 @@ func main() {
 	http.Handle("/searchByRegistryCode", searchByRegistryCodeHandler)
 	http.Handle("/searchByBusinessName", searchByBusinessNameHandler)
 
-	logger.Log("msg", "HTTP", "addr", *listen)
-	logger.Log("err", http.ListenAndServe(*listen, nil))
+	logger.Log("msg", "HTTP", "addr", listen)
+	logger.Log("err", http.ListenAndServe(":"+listen, nil))
 }
