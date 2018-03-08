@@ -30,15 +30,30 @@ func (client aprclient) SetHeadles(headless bool) {
 
 func (client aprclient) createAndStartDriver() (*agouti.WebDriver, error) {
 	var driver *agouti.WebDriver
+
+	options := []agouti.Option{}
+
+	options = append(options, agouti.Debug)
+
+	/*
+		chromeBin := os.Getenv("GOOGLE_CHROME_SHIM")
+		if chromeBin != "" {
+			option1 := agouti.ChromeOptions("args", []string{
+				"--headless",
+				"--disable-gpu",
+			})
+		}
+	*/
 	if client.headless {
-		cdo1 := agouti.ChromeOptions("args", []string{
+		o := agouti.ChromeOptions("args", []string{
 			"--headless",
 			"--disable-gpu",
 		})
-		driver = agouti.ChromeDriver(cdo1)
-	} else {
-		driver = agouti.ChromeDriver()
+		options = append(options, o)
+
 	}
+
+	driver = agouti.ChromeDriver(options...)
 	if err := driver.Start(); err != nil {
 		return nil, fmt.Errorf("failed to start Chrome driver: %v", err)
 	}
