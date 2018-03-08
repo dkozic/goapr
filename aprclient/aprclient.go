@@ -47,6 +47,7 @@ func (client aprclient) createAndStartDriver() (*agouti.WebDriver, error) {
 		o := agouti.ChromeOptions("args", []string{
 			"--headless",
 			"--disable-gpu",
+			"--no-sandbox",
 		})
 		options = append(options, o)
 	}
