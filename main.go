@@ -8,7 +8,7 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-const searchUrl = "http://pretraga2.apr.gov.rs/ObjedinjenePretrage/Search/Search"
+const APR_URL = "http://pretraga2.apr.gov.rs/ObjedinjenePretrage/Search/Search"
 
 func main() {
 	listen := os.Getenv("PORT")
@@ -16,12 +16,17 @@ func main() {
 		listen = "8080"
 	}
 
+	aprUrl := os.Getenv("APR_URL")
+	if aprUrl == "" {
+		aprUrl = APR_URL
+	}
+
 	var logger log.Logger
 	logger = log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
 	logger = log.With(logger, "ts", log.DefaultTimestampUTC, "listen", listen, "caller", log.DefaultCaller)
 
 	var svc AprService
-	svc = aprService{searchUrl}
+	svc = aprService{aprUrl}
 	svc = loggingMiddleware(logger)(svc)
 
 	searchByRegistryCodeHandler := httptransport.NewServer(
