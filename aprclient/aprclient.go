@@ -3,6 +3,7 @@ package aprclient
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/sclevine/agouti"
@@ -33,24 +34,20 @@ func (client aprclient) createAndStartDriver() (*agouti.WebDriver, error) {
 
 	options := []agouti.Option{}
 
-	options = append(options, agouti.Debug)
+	// options = append(options, agouti.Debug)
 
-	/*
-		chromeBin := os.Getenv("GOOGLE_CHROME_SHIM")
-		if chromeBin != "" {
-			option1 := agouti.ChromeOptions("args", []string{
-				"--headless",
-				"--disable-gpu",
-			})
-		}
-	*/
+	chromeBin := os.Getenv("GOOGLE_CHROME_SHIM")
+	if chromeBin != "" {
+		o := agouti.ChromeOptions("binary", chromeBin)
+		options = append(options, o)
+	}
+
 	if client.headless {
 		o := agouti.ChromeOptions("args", []string{
 			"--headless",
 			"--disable-gpu",
 		})
 		options = append(options, o)
-
 	}
 
 	driver = agouti.ChromeDriver(options...)
