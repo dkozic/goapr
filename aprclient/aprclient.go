@@ -1,6 +1,7 @@
 package aprclient
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -15,7 +16,7 @@ type aprclient struct {
 func New(url string) aprclient {
 	var c aprclient
 	c.url = url
-	c.headless = false
+	c.headless = true
 	return c
 }
 
@@ -25,6 +26,23 @@ func (client aprclient) Headles() bool {
 
 func (client aprclient) SetHeadles(headless bool) {
 	client.headless = headless
+}
+
+func (client aprclient) createAndStartDriver() (*agouti.WebDriver, error) {
+	var driver *agouti.WebDriver
+	if client.headless {
+		cdo1 := agouti.ChromeOptions("args", []string{
+			"--headless",
+			"--disable-gpu",
+		})
+		driver = agouti.ChromeDriver(cdo1)
+	} else {
+		driver = agouti.ChromeDriver()
+	}
+	if err := driver.Start(); err != nil {
+		return nil, fmt.Errorf("failed to start Chrome driver: %v", err)
+	}
+	return driver, nil
 }
 
 func parseLineByColon(in string) string {

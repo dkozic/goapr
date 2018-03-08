@@ -3,17 +3,15 @@ package aprclient
 import (
 	"fmt"
 	"strings"
-
-	"github.com/sclevine/agouti"
 )
 
 func (client aprclient) SearchByRegistryCode(registryCode string) (SearchByRegistryCodeResult, error) {
 
 	var srs SearchByRegistryCodeResult
 
-	driver := agouti.ChromeDriver()
-	if err := driver.Start(); err != nil {
-		return srs, fmt.Errorf("failed to start Chrome driver: %v", err)
+	driver, err := client.createAndStartDriver()
+	if err != nil {
+		return srs, err
 	}
 
 	defer closeDriver(driver)
