@@ -34,9 +34,10 @@ func (client aprclient) createAndStartDriver() (*agouti.WebDriver, error) {
 
 	options := []agouti.Option{}
 
-	// options = append(options, agouti.Debug)
+	options = append(options, agouti.Debug)
 
 	chromeBin := os.Getenv("GOOGLE_CHROME_SHIM")
+	log.Printf("GOOGLE_CHROME_SHIM: %s", chromeBin)
 	if chromeBin != "" {
 		o := agouti.ChromeOptions("binary", chromeBin)
 		options = append(options, o)
