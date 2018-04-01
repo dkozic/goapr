@@ -8,25 +8,31 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-const APR_URL = "http://pretraga2.apr.gov.rs/ObjedinjenePretrage/Search/Search"
-
 func main() {
-	listen := os.Getenv("PORT")
-	if listen == "" {
-		listen = "8080"
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
 	}
 
-	aprUrl := os.Getenv("APR_URL")
-	if aprUrl == "" {
-		aprUrl = APR_URL
+	aprAddress := os.Getenv("APR_URL")
+	if aprAddress == "" {
+		aprAddress = "http://pretraga2.apr.gov.rs/ObjedinjenePretrage/Search/Search"
+	}
+
+	headless := os.Getenv("HEADLESS")
+	if headless == "" {
+		headless = "true"
 	}
 
 	var logger log.Logger
 	logger = log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
-	logger = log.With(logger, "ts", log.DefaultTimestampUTC, "listen", listen, "caller", log.DefaultCaller)
+	logger = log.With(logger, "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller)
+
+	logger.Log("port", port, "headless", headless, "aprAddress", aprAddress)
 
 	var svc AprService
-	svc = aprService{aprUrl}
+	svc = aprService{aprAddress, headless == "true"}
 	svc = loggingMiddleware(logger)(svc)
 
 	searchByRegistryCodeHandler := httptransport.NewServer(
@@ -43,6 +49,6 @@ func main() {
 	http.Handle("/searchByRegistryCode", searchByRegistryCodeHandler)
 	http.Handle("/searchByBusinessName", searchByBusinessNameHandler)
 
-	logger.Log("msg", "HTTP", "addr", listen)
-	logger.Log("err", http.ListenAndServe(":"+listen, nil))
+	logger.Log("msg", "HTTP", "addr", port)
+	logger.Log("err", http.ListenAndServe(":"+port, nil))
 }

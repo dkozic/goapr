@@ -14,19 +14,12 @@ type aprclient struct {
 	headless bool
 }
 
-func New(url string) aprclient {
+// New creates new aprClient
+func New(url string, headless bool) aprclient {
 	var c aprclient
 	c.url = url
-	c.headless = true
+	c.headless = headless
 	return c
-}
-
-func (client aprclient) Headles() bool {
-	return client.headless
-}
-
-func (client aprclient) SetHeadles(headless bool) {
-	client.headless = headless
 }
 
 func (client aprclient) createAndStartDriver() (*agouti.WebDriver, error) {
@@ -37,7 +30,6 @@ func (client aprclient) createAndStartDriver() (*agouti.WebDriver, error) {
 	options = append(options, agouti.Debug)
 
 	chromeBin := os.Getenv("GOOGLE_CHROME_SHIM")
-	log.Printf("GOOGLE_CHROME_SHIM: %s", chromeBin)
 	if chromeBin != "" {
 		o := agouti.ChromeOptions("binary", chromeBin)
 		options = append(options, o)

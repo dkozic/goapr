@@ -29,22 +29,22 @@ func (client aprclient) SearchByRegistryCode(registryCode string) (SearchByRegis
 		return srs, fmt.Errorf("failed to open page: %v", err)
 	}
 
-	actualUrl, err := page.URL()
+	actualURL, err := page.URL()
 	if err != nil {
 		return srs, fmt.Errorf("failed to get page URL: %v", err)
 	}
 
-	expectedUrl := client.url
-	if actualUrl != expectedUrl {
-		return srs, fmt.Errorf("expected URL to be %s but got %s", expectedUrl, actualUrl)
+	expectedURL := client.url
+	if actualURL != expectedURL {
+		return srs, fmt.Errorf("expected URL to be %s but got %s", expectedURL, actualURL)
 	}
 
-	if title, err := page.Title(); err != nil {
+	title, err := page.Title()
+	if err != nil {
 		return srs, fmt.Errorf("failed to get title: %v", err)
-	} else {
-		if title != "Претрага правних лица и предузетника" {
-			return srs, fmt.Errorf("wrong title: %s", title)
-		}
+	}
+	if title != "Претрага правних лица и предузетника" {
+		return srs, fmt.Errorf("wrong title: %s", title)
 	}
 
 	forms := page.AllByXPath("//html/body/form[@action='/ObjedinjenePretrage/Search/SearchResult']")
@@ -70,34 +70,50 @@ func (client aprclient) SearchByRegistryCode(registryCode string) (SearchByRegis
 	table := page.FirstByClass("ContentTable")
 	link := table.FirstByXPath(".//a[contains(text(), 'детаљније')]")
 	if err := link.Click(); err != nil {
-		return srs, fmt.Errorf("failed to click on details: %v", err)
+		text1 := page.FirstByClass("field-validation-error")
+		f1, err := text1.Text()
+		if err != nil {
+			text2 := page.FirstByClass("Message")
+			f2, err := text2.Text()
+			if err != nil {
+				return srs, fmt.Errorf("failed to click on details")
+			}
+			return srs, fmt.Errorf("message exists: %s", f2)
+		}
+		return srs, fmt.Errorf("validation error exists: %s", f1)
 	}
 
 	// main data
-	mainDataP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Основни подаци')]]/div[@class='GroupContent']/p")
-	if t, err := mainDataP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get mainData text: %v", err)
-	} else {
+	{
+		mainDataP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Основни подаци')]]/div[@class='GroupContent']/p")
+		t, err := mainDataP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get mainData text: %v", err)
+		}
 		srs.MainData = parseMainData(t)
 	}
 
 	// businessNames
-	businessNameP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Пословно име')]]/div[@class='GroupContent']")
-	if t, err := businessNameP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get business name text: %v", err)
-	} else {
+	{
+		businessNameP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Пословно име')]]/div[@class='GroupContent']")
+		t, err := businessNameP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get business name text: %v", err)
+		}
 		srs.BusinessNames = parseBusinessNames(t)
 	}
 
 	//legal representatives
-	legalRepresentativesLink := page.FirstByLink("Законски заступници")
-	if err := legalRepresentativesLink.Click(); err != nil {
-		return srs, fmt.Errorf("failed to get link legalRepresentative: %v", err)
-	}
-	legalRepresentativePersonP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Физичка лица')]]/div[@class='GroupContent']")
-	if t, err := legalRepresentativePersonP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get legalRepresentative text: %v", err)
-	} else {
+	{
+		legalRepresentativesLink := page.FirstByLink("Законски заступници")
+		if err := legalRepresentativesLink.Click(); err != nil {
+			return srs, fmt.Errorf("failed to get link legalRepresentative: %v", err)
+		}
+		legalRepresentativePersonP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Физичка лица')]]/div[@class='GroupContent']")
+		t, err := legalRepresentativePersonP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get legalRepresentative text: %v", err)
+		}
 		srs.LegalRepresentatives.Persons = parseLegalRepresentativePersons(t)
 	}
 

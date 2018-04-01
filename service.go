@@ -13,7 +13,8 @@ type AprService interface {
 }
 
 type aprService struct {
-	url string
+	url      string
+	headless bool
 }
 
 func (svc aprService) SearchByRegistryCode(registryCode string) (aprclient.SearchByRegistryCodeResult, error) {
@@ -21,7 +22,7 @@ func (svc aprService) SearchByRegistryCode(registryCode string) (aprclient.Searc
 	if registryCode == "" {
 		return res, ErrEmpty
 	}
-	client := aprclient.New(svc.url)
+	client := aprclient.New(svc.url, svc.headless)
 	res, err := client.SearchByRegistryCode(registryCode)
 	return res, err
 }
@@ -30,13 +31,9 @@ func (svc aprService) SearchByBusinessName(businessName string) ([]aprclient.Sea
 	if businessName == "" {
 		return nil, ErrEmpty
 	}
-	client := aprclient.New(svc.url)
-	if res, err := client.SearchByBusinessName(businessName); err != nil {
-		return nil, err
-	} else {
-		return res, nil
-	}
-
+	client := aprclient.New(svc.url, svc.headless)
+	res, err := client.SearchByBusinessName(businessName)
+	return res, err
 }
 
 // ErrEmpty is returned when an input string is empty.
