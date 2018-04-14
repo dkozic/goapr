@@ -4,7 +4,8 @@ import (
 	"fmt"
 )
 
-func (client aprclient) SearchByBusinessName(businessName string) ([]SearchByBusinessNameResult, error) {
+// SearchByBusinessName searches by name of registered entity
+func (client AprClient) SearchByBusinessName(businessName string) ([]SearchByBusinessNameResult, error) {
 
 	driver, err := client.createAndStartDriver()
 	if err != nil {
@@ -26,22 +27,22 @@ func (client aprclient) SearchByBusinessName(businessName string) ([]SearchByBus
 		return nil, fmt.Errorf("failed to open page: %v", err)
 	}
 
-	actualUrl, err := page.URL()
+	actualURL, err := page.URL()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get page URL: %v", err)
 	}
 
-	expectedUrl := client.url
-	if actualUrl != expectedUrl {
-		return nil, fmt.Errorf("expected URL to be %s but got %s", expectedUrl, actualUrl)
+	expectedURL := client.url
+	if actualURL != expectedURL {
+		return nil, fmt.Errorf("expected URL to be %s but got %s", expectedURL, actualURL)
 	}
 
-	if title, err := page.Title(); err != nil {
+	title, err := page.Title()
+	if err != nil {
 		return nil, fmt.Errorf("failed to get title: %v", err)
-	} else {
-		if title != "Претрага правних лица и предузетника" {
-			return nil, fmt.Errorf("wrong title: %s", title)
-		}
+	}
+	if title != "Претрага правних лица и предузетника" {
+		return nil, fmt.Errorf("wrong title: %s", title)
 	}
 
 	forms := page.AllByXPath("//html/body/form[@action='/ObjedinjenePretrage/Search/SearchResult']")
@@ -69,43 +70,43 @@ func (client aprclient) SearchByBusinessName(businessName string) ([]SearchByBus
 	table := page.FirstByClass("ContentTable")
 	trs := table.AllByXPath(".//tr[@class='ContentTableRowData']")
 
-	if cnt, err := trs.Count(); err != nil {
+	cnt, err := trs.Count()
+	if err != nil {
 		return nil, fmt.Errorf("failed to get count of tr elements: %v", err)
-	} else {
-		for i := 0; i < cnt; i++ {
-			var r SearchByBusinessNameResult
-			tr := trs.At(i)
+	}
+	for i := 0; i < cnt; i++ {
+		var r SearchByBusinessNameResult
+		tr := trs.At(i)
 
-			td1 := tr.FirstByXPath("./td[1]")
-			if t, err := td1.Text(); err != nil {
-				return nil, fmt.Errorf("failed to get text of td[1]: %v", err)
-			} else {
-				r.LegalForm = t
-			}
-
-			td2 := tr.FirstByXPath("./td[2]")
-			if t, err := td2.Text(); err != nil {
-				return nil, fmt.Errorf("failed to get text of td[2]: %v", err)
-			} else {
-				r.RegistryCode = t
-			}
-
-			td3 := tr.FirstByXPath("./td[3]")
-			if t, err := td3.Text(); err != nil {
-				return nil, fmt.Errorf("failed to get text of td[3]: %v", err)
-			} else {
-				r.BusinessName = t
-			}
-
-			td4 := tr.FirstByXPath("./td[4]")
-			if t, err := td4.Text(); err != nil {
-				return nil, fmt.Errorf("failed to get text of td[4]: %v", err)
-			} else {
-				r.Status = t
-			}
-
-			results = append(results, r)
+		td1 := tr.FirstByXPath("./td[1]")
+		t1, err := td1.Text()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get text of td[1]: %v", err)
 		}
+		r.LegalForm = t1
+
+		td2 := tr.FirstByXPath("./td[2]")
+		t, err := td2.Text()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get text of td[2]: %v", err)
+		}
+		r.RegistryCode = t
+
+		td3 := tr.FirstByXPath("./td[3]")
+		t3, err := td3.Text()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get text of td[3]: %v", err)
+		}
+		r.BusinessName = t3
+
+		td4 := tr.FirstByXPath("./td[4]")
+		t4, err := td4.Text()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get text of td[4]: %v", err)
+		}
+		r.Status = t4
+
+		results = append(results, r)
 	}
 
 	return results, nil

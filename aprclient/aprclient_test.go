@@ -5,11 +5,11 @@ import (
 	"log"
 )
 
-const searchUrl = "http://pretraga2.apr.gov.rs/ObjedinjenePretrage/Search/Search"
+const searchURL = "http://pretraga2.apr.gov.rs/ObjedinjenePretrage/Search/Search"
 
-func ExampleSearchByRegistryCode1() {
+func ExampleAprClient_SearchByRegistryCode() {
 
-	client := New(searchUrl, false)
+	client := NewAprClient(searchURL, false)
 
 	if sr, err := client.SearchByRegistryCode("21180408"); err != nil {
 		log.Printf("Unsuccesful search: %v", err)
@@ -24,9 +24,9 @@ func ExampleSearchByRegistryCode1() {
 	//Output:
 }
 
-func ExampleSearchByRegistryCode2() {
+func ExampleAprClient_SearchByRegistryCode_second() {
 
-	client := New(searchUrl, false)
+	client := NewAprClient(searchURL, false)
 
 	if sr, err := client.SearchByRegistryCode(""); err != nil {
 		log.Printf("Unsuccesful search: %v", err)
@@ -41,9 +41,9 @@ func ExampleSearchByRegistryCode2() {
 	//Output:
 }
 
-func ExampleSearchByRegistryCode3() {
+func ExampleAprClient_SearchByRegistryCode_third() {
 
-	client := New(searchUrl, false)
+	client := NewAprClient(searchURL, false)
 
 	if sr, err := client.SearchByRegistryCode("123"); err != nil {
 		log.Printf("Unsuccesful search: %v", err)
@@ -58,9 +58,9 @@ func ExampleSearchByRegistryCode3() {
 	//Output:
 }
 
-func ExampleSearchByRegistryCode4() {
+func ExampleAprClient_SearchByRegistryCode_fourth() {
 
-	client := New(searchUrl, false)
+	client := NewAprClient(searchURL, false)
 
 	if sr, err := client.SearchByRegistryCode("99999999"); err != nil {
 		log.Printf("Unsuccesful search: %v", err)
@@ -75,9 +75,9 @@ func ExampleSearchByRegistryCode4() {
 	//Output:
 }
 
-func ExampleSearchByBusinessName1() {
+func ExampleAprClient_SearchByBusinessName() {
 
-	client := New(searchUrl, false)
+	client := NewAprClient(searchURL, false)
 
 	if sr, err := client.SearchByBusinessName("sedecom"); err != nil {
 		log.Printf("Unsuccesful search: %v", err)
@@ -92,9 +92,9 @@ func ExampleSearchByBusinessName1() {
 	//Output:
 }
 
-func ExampleSearchByBusinessName2() {
+func ExampleAprClient_SearchByBusinessName_second() {
 
-	client := New(searchUrl, false)
+	client := NewAprClient(searchURL, false)
 
 	if sr, err := client.SearchByBusinessName(""); err != nil {
 		log.Printf("Unsuccesful search: %v", err)
@@ -109,9 +109,9 @@ func ExampleSearchByBusinessName2() {
 	//Output:
 }
 
-func ExampleSearchByBusinessName3() {
+func ExampleAprClient_SearchByBusinessName_third() {
 
-	client := New(searchUrl, false)
+	client := NewAprClient(searchURL, false)
 
 	if sr, err := client.SearchByBusinessName("aa"); err != nil {
 		log.Printf("Unsuccesful search: %v", err)

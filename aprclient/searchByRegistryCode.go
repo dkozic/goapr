@@ -5,7 +5,8 @@ import (
 	"strings"
 )
 
-func (client aprclient) SearchByRegistryCode(registryCode string) (SearchByRegistryCodeResult, error) {
+// SearchByRegistryCode searches by register code of the company
+func (client AprClient) SearchByRegistryCode(registryCode string) (SearchByRegistryCodeResult, error) {
 
 	var srs SearchByRegistryCodeResult
 
@@ -118,38 +119,48 @@ func (client aprclient) SearchByRegistryCode(registryCode string) (SearchByRegis
 	}
 
 	// members
-	membersLink := page.FirstByLink("Чланови")
-	if err := membersLink.Click(); err != nil {
-		return srs, fmt.Errorf("failed to get link members: %v", err)
-	}
-	membersP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Чланови')]]/div[@class='GroupContent']")
-	if t, err := membersP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get members text: %v", err)
-	} else {
+	{
+		membersLink := page.FirstByLink("Чланови")
+		if err := membersLink.Click(); err != nil {
+			return srs, fmt.Errorf("failed to get link members: %v", err)
+		}
+		membersP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Чланови')]]/div[@class='GroupContent']")
+		t, err := membersP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get members text: %v", err)
+		}
 		srs.Members = parseMembers(t)
 	}
 
 	// address
-	adressesLink := page.FirstByLink("Подаци о адресама")
-	if err := adressesLink.Click(); err != nil {
-		return srs, fmt.Errorf("failed to get link adresses: %v", err)
-	}
-	hqAddressP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Адреса седишта')]]/div[@class='GroupContent']")
-	if t, err := hqAddressP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get headquarter address text: %v", err)
-	} else {
+	{
+		adressesLink := page.FirstByLink("Подаци о адресама")
+		if err := adressesLink.Click(); err != nil {
+			return srs, fmt.Errorf("failed to get link adresses: %v", err)
+		}
+		hqAddressP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Адреса седишта')]]/div[@class='GroupContent']")
+		t, err := hqAddressP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get headquarter address text: %v", err)
+		}
 		srs.Addresses.HeadquarterAddress = parseAddress(t)
 	}
-	pAddressP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Адреса за пријем поште')]]/div[@class='GroupContent']")
-	if t, err := pAddressP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get postal address text: %v", err)
-	} else {
+
+	{
+		pAddressP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Адреса за пријем поште')]]/div[@class='GroupContent']")
+		t, err := pAddressP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get postal address text: %v", err)
+		}
 		srs.Addresses.PostalAddress = parseAddress(t)
 	}
-	eAddressP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Адреса за пријем електронске поште')]]/div[@class='GroupContent']")
-	if t, err := eAddressP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get email address text: %v", err)
-	} else {
+
+	{
+		eAddressP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Адреса за пријем електронске поште')]]/div[@class='GroupContent']")
+		t, err := eAddressP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get email address text: %v", err)
+		}
 		srs.Addresses.EmailAddress = parseEmailAddress(t)
 	}
 
@@ -158,34 +169,49 @@ func (client aprclient) SearchByRegistryCode(registryCode string) (SearchByRegis
 	if err := buinessDataLink.Click(); err != nil {
 		return srs, fmt.Errorf("failed to get link business data: %v", err)
 	}
-	establishementP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Подаци оснивања')]]/div[@class='GroupContent']")
-	if t, err := establishementP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get establishment data text: %v", err)
-	} else {
+
+	{
+		establishementP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Подаци оснивања')]]/div[@class='GroupContent']")
+		t, err := establishementP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get establishment data text: %v", err)
+		}
 		srs.BusinessData.Establishment = parseEstablishment(t)
 	}
-	durationP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Време трајања')]]/div[@class='GroupContent']")
-	if t, err := durationP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get duration data text: %v", err)
-	} else {
+
+	{
+		durationP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Време трајања')]]/div[@class='GroupContent']")
+		t, err := durationP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get duration data text: %v", err)
+		}
 		srs.BusinessData.Duration = parseDuration(t)
 	}
-	activityP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Претежна делатност')]]/div[@class='GroupContent']")
-	if t, err := activityP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get activity data text: %v", err)
-	} else {
+
+	{
+		activityP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Претежна делатност')]]/div[@class='GroupContent']")
+		t, err := activityP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get activity data text: %v", err)
+		}
 		srs.BusinessData.MainActivity = parseActivity(t)
 	}
-	identP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Остали идентификациони подаци')]]/div[@class='GroupContent']")
-	if t, err := identP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get ident data text: %v", err)
-	} else {
+
+	{
+		identP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Остали идентификациони подаци')]]/div[@class='GroupContent']")
+		t, err := identP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get ident data text: %v", err)
+		}
 		srs.BusinessData.Ident = parseIdent(t)
 	}
-	contactP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Контакт подаци')]]/div[@class='GroupContent']")
-	if t, err := contactP.Text(); err != nil {
-		return srs, fmt.Errorf("failed to get contact data text: %v", err)
-	} else {
+
+	{
+		contactP := page.FirstByXPath("//div[@class='Group' and ./div[@class='GroupHeader' and contains(text(), 'Контакт подаци')]]/div[@class='GroupContent']")
+		t, err := contactP.Text()
+		if err != nil {
+			return srs, fmt.Errorf("failed to get contact data text: %v", err)
+		}
 		srs.BusinessData.Contact = parseContact(t)
 	}
 

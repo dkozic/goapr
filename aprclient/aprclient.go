@@ -9,20 +9,21 @@ import (
 	"github.com/sclevine/agouti"
 )
 
-type aprclient struct {
+// AprClient is WebDriver based client to www.apr.rs
+type AprClient struct {
 	url      string
 	headless bool
 }
 
-// New creates new aprClient
-func New(url string, headless bool) aprclient {
-	var c aprclient
+// NewAprClient creates new AprClient
+func NewAprClient(url string, headless bool) AprClient {
+	var c AprClient
 	c.url = url
 	c.headless = headless
 	return c
 }
 
-func (client aprclient) createAndStartDriver() (*agouti.WebDriver, error) {
+func (client AprClient) createAndStartDriver() (*agouti.WebDriver, error) {
 	var driver *agouti.WebDriver
 
 	options := []agouti.Option{}
